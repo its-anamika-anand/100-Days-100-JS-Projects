@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic-Tac-Toe</title>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f36161;
+}
+
+.game-container {
+  text-align: center;
+  width: 300px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.cell {
+  width: 90px;
+  height: 90px;
+  border: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+#status {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+</style>
+<body>
+  <div class="game-container">
+    <h1>Tic-Tac-Toe</h1>
+    <div id="board" class="board">
+      <div class="cell" data-cell-index="0"></div>
+      <div class="cell" data-cell-index="1"></div>
+      <div class="cell" data-cell-index="2"></div>
+      <div class="cell" data-cell-index="3"></div>
+      <div class="cell" data-cell-index="4"></div>
+      <div class="cell" data-cell-index="5"></div>
+      <div class="cell" data-cell-index="6"></div>
+      <div class="cell" data-cell-index="7"></div>
+      <div class="cell" data-cell-index="8"></div>
+    </div>
+    <div id="status">
+      <p>Player X's Turn</p>
+    </div>
+    <button id="reset-btn">Reset Game</button>
+    
+
+  </div>
+
+  <script>
+       // script.js
+const board = document.getElementById('board');
+const cells = document.querySelectorAll('.cell');
+const statusDisplay = document.getElementById('status').querySelector('p');
+const resetButton = document.getElementById('reset-btn');
+let currentPlayer = 'X'; // Player X starts
+let gameActive = true;
+let boardState = ['', '', '', '', '', '', '', '', '']; // Empty cells
+
+// Functions to check the win conditions
+const winConditions = [
+  [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+  [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+  [0, 4, 8], [2, 4, 6] // Diagonals
+];
+
+// Update the board UI
+function updateBoard() {
+  cells.forEach((cell, index) => {
+    cell.textContent = boardState[index];
+  });
+}
+
+// Handle cell click
+function handleCellClick(event) {
+  const index = event.target.getAttribute('data-cell-index');
+  if (boardState[index] || !gameActive) return; // Ignore if the cell is already filled or game is over
+
+  boardState[index] = currentPlayer; // Update the board state with the current player's symbol
+  updateBoard();
+  checkGameStatus();
+}
+
+// Check for a win or a tie
+function checkGameStatus() {
+  let roundWon = false;
+
+  // Check each win condition
+  for (let i = 0; i < winConditions.length; i++) {
+    const [a, b, c] = winConditions[i];
+    if (boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
+      roundWon = true;
+      break;
+    }
+  }
+
+  if (roundWon) {
+    statusDisplay.textContent = `Player ${currentPlayer} wins!`;
+    gameActive = false;
+    return;
+  }
+
+  // Check for tie (board is full)
+  if (!boardState.includes('')) {
+    statusDisplay.textContent = 'It\'s a tie!';
+    gameActive = false;
+    return;
+  }
+
+  // Change turn
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+}
+
+// Reset the game
+function resetGame() {
+  boardState = ['', '', '', '', '', '', '', '', ''];
+  gameActive = true;
+  currentPlayer = 'X';
+  statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+  updateBoard();
+}
+
+// Event listeners
+cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+resetButton.addEventListener('click', resetGame);
+
+// Initialize the board display
+updateBoard();
+
+  </script>
+</body>
+</html>
