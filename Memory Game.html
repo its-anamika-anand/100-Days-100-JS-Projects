@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Game</title>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+<style>
+    /* style.css */
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f28282fa;
+}
+
+.game-container {
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 100px);
+  grid-template-rows: repeat(4, 100px);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.card {
+  width: 100px;
+  height: 100px;
+  background-color: #fff;
+  border: 1px solid #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.card.flipped {
+  background-color: #ddd;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #f41906;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #eb0808;
+}
+
+#status {
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+</style>
+<body>
+  <div class="game-container">
+    <h1>Memory Game</h1>
+    <div id="board" class="board"></div>
+    <button id="reset-btn">Restart Game</button>
+    <div id="status"></div>
+  </div>
+  
+  <script>
+    // script.js
+const board = document.getElementById('board');
+const resetButton = document.getElementById('reset-btn');
+const statusDisplay = document.getElementById('status');
+let cards = [];
+let flippedCards = [];
+let matchedCards = 0;
+let gameActive = true;
+
+// Create an array of card values
+const cardValues = [
+  '1', '2', '3', '4', '5', '6', '7', '8',
+  '1', '2', '3', '4', '5', '6', '7', '8'
+];
+
+// Shuffle the cards array
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+  return array;
+}
+
+// Create the board
+function createBoard() {
+  shuffledCards = shuffleArray([...cardValues]);
+
+  shuffledCards.forEach((value, index) => {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.dataset.cardValue = value;
+    card.dataset.index = index;
+    card.addEventListener('click', handleCardClick);
+    board.appendChild(card);
+    cards.push(card);
+  });
+}
+
+// Handle card flip
+function handleCardClick(event) {
+  if (!gameActive || flippedCards.length === 2 || event.target.classList.contains('flipped')) return;
+
+  const card = event.target;
+  card.textContent = card.dataset.cardValue;
+  card.classList.add('flipped');
+  flippedCards.push(card);
+
+  // If two cards are flipped, check for a match
+  if (flippedCards.length === 2) {
+    checkMatch();
+  }
+}
+
+// Check if the flipped cards match
+function checkMatch() {
+  const [card1, card2] = flippedCards;
+
+  if (card1.dataset.cardValue === card2.dataset.cardValue) {
+    matchedCards += 2;
+    flippedCards = [];
+    statusDisplay.textContent = `Matched Cards: ${matchedCards / 2}`;
+    if (matchedCards === cards.length) {
+      statusDisplay.textContent = 'You Win! Game Over!';
+      gameActive = false;
+    }
+  } else {
+    setTimeout(() => {
+      card1.classList.remove('flipped');
+      card2.classList.remove('flipped');
+      card1.textContent = '';
+      card2.textContent = '';
+      flippedCards = [];
+    }, 1000);
+  }
+}
+
+// Reset the game
+function resetGame() {
+  board.innerHTML = '';
+  cards = [];
+  flippedCards = [];
+  matchedCards = 0;
+  gameActive = true;
+  statusDisplay.textContent = '';
+  createBoard();
+}
+
+// Initialize the game
+createBoard();
+
+// Add event listener for reset button
+resetButton.addEventListener('click', resetGame);
+
+  </script>
+</body>
+</html>
