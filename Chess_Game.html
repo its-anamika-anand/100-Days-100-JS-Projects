@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chess Game</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    #chessboard {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      border: 2px solid #000;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .square {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 36px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .square.light {
+      background-color: white;
+    }
+
+    .square.dark {
+      background-color: black;
+      color: white;
+    }
+
+    .selected {
+      outline: 3px solid red;
+    }
+  </style>
+</head>
+<body>
+  <div id="chessboard"></div>
+
+  <script>
+    const chessboard = document.getElementById('chessboard');
+
+    const pieces = [
+      '♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜',
+      '♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟',
+      '', '', '', '', '', '', '', '',
+      '', '', '', '', '', '', '', '',
+      '', '', '', '', '', '', '', '',
+      '', '', '', '', '', '', '', '',
+      '♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙',
+      '♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'
+    ];
+
+    let selectedSquare = null;
+    let currentTurn = 'white';
+
+    function createChessboard() {
+      chessboard.innerHTML = '';
+      for (let i = 0; i < 64; i++) {
+        const square = document.createElement('div');
+        square.classList.add('square');
+        square.classList.add((i + Math.floor(i / 8)) % 2 === 0 ? 'light' : 'dark');
+        square.dataset.index = i;
+        square.textContent = pieces[i];
+        square.addEventListener('click', handleClick);
+        chessboard.appendChild(square);
+      }
+    }
+
+    function handleClick(e) {
+      const index = +e.currentTarget.dataset.index;
+      const piece = pieces[index];
+
+      if (selectedSquare === null && piece !== '') {
+        if ((currentTurn === 'white' && isWhite(piece)) ||
+            (currentTurn === 'black' && isBlack(piece))) {
+          selectedSquare = index;
+          highlightSquare(index);
+        }
+      } else if (selectedSquare !== null) {
+        movePiece(selectedSquare, index);
+        selectedSquare = null;
+        clearHighlights();
+        currentTurn = currentTurn === 'white' ? 'black' : 'white';
+      }
+    }
+
+    function highlightSquare(index) {
+      clearHighlights();
+      const square = document.querySelector(`[data-index="${index}"]`);
+      if (square) square.classList.add('selected');
+    }
+
+    function clearHighlights() {
+      document.querySelectorAll('.square').forEach(sq => sq.classList.remove('selected'));
+    }
+
+    function movePiece(from, to) {
+      pieces[to] = pieces[from];
+      pieces[from] = '';
+      createChessboard();
+    }
+
+    function isWhite(piece) {
+      return '♙♖♘♗♕♔'.includes(piece);
+    }
+
+    function isBlack(piece) {
+      return '♟♜♞♝♛♚'.includes(piece);
+    }
+
+    createChessboard();
+  </script>
+</body>
+</html>
