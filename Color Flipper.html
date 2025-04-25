@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Color Flipper</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;0,700;1,400&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Mulish", sans-serif;
+  color: #fff;
+  line-height: 1.5;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  background-color: #4a89dc;
+}
+
+h1 {
+  background: #111;
+  color: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 2.5rem;
+}
+h1 span {
+  color: #4a89dc;
+}
+
+button {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: #111;
+  letter-spacing: 0.25rem;
+  text-transform: uppercase;
+  padding: 0.75rem 1.25rem;
+  background: transparent;
+  display: inline-block;
+  border: 2px solid #111;
+  border-radius: 1rem;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.3 linear;
+}
+button:hover {
+  border-color: #fff;
+  color: #fff;
+  transition: all 0.3 linear;
+}
+</style>
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="container">
+  <h1>Background color: <span class="color">#4A89DC</span></h1>
+  <button id="btn">click me</button>
+</div>
+<!-- partial -->
+  <script>
+const colors = ["#4A89DC", "#37BC9B", "#F6BB42", "#DA4453", "#967ADC"];
+const btn = document.getElementById("btn");
+const color = document.querySelector(".color");
+
+btn.addEventListener("click", changeBackgroundColor);
+
+function changeBackgroundColor() {
+  const randomNumber = getRandomNumber();
+  const selectedColor = colors[randomNumber];
+
+  document.body.style.backgroundColor = selectedColor;
+  color.style.color = selectedColor;
+  color.textContent = selectedColor;
+}
+
+function getRandomNumber() {
+  return Math.floor(Math.random() * colors.length);
+}
+  </script>
+
+</body>
+</html>
