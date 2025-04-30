@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Anamika Anand-Box Shadow Generator</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;0,700;1,400&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Mulish", sans-serif;
+  color: #b9e0f2;
+  line-height: 1.5;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: #0f172a;
+}
+
+.card {
+  width: calc(100% - 30px);
+  max-width: 640px;
+  margin: 15px;
+  padding: 20px;
+  border: 1px solid #222f43;
+  border-radius: 20px;
+  background-color: #fff;
+  color: #0f172a;
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.05);
+}
+.card .preview {
+  padding: 20px 0 50px;
+}
+.card .preview__item {
+  background-color: #222f43;
+  width: 150px;
+  height: 150px;
+  position: relative;
+  margin: auto;
+  border-radius: 30px;
+  box-shadow: 5px 15px 30px 5px rgba(0, 0, 0, 0.5);
+}
+.card .settings {
+  display: grid;
+  grid-template-columns: 6fr 6fr;
+  gap: 15px 25px;
+}
+.card .settings__range {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.card .settings__range input[type=range] {
+  width: 100%;
+  cursor: pointer;
+}
+.card .settings__input {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.card .settings__input input[type=checkbox] {
+  cursor: pointer;
+}
+.card .settings__color {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+}
+.card .settings__color input[type=color] {
+  width: 25px;
+  height: 25px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+.card .settings label {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.card .code {
+  display: grid;
+  grid-template-columns: 6fr 2fr;
+  gap: 10px;
+  margin-top: 20px;
+}
+.card .code button {
+  background-color: #0ea5ea;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #fff;
+}
+.card .code textarea {
+  resize: none;
+  padding: 5px;
+  border: 1px solid #0ea5ea;
+  border-radius: 6px;
+}
+
+@media (max-width: 575px) {
+  .card .settings,
+.card .code {
+    grid-template-columns: unset;
+  }
+  .card .code textarea {
+    height: 60px;
+  }
+  .card .code button {
+    padding: 8px;
+  }
+}
+</style>
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="card">
+  <div class="preview">
+    <div class="preview__item" id="preview"></div>
+  </div>
+
+  <div class="settings">
+    <div class="settings__range">
+      <label for="x-shadow">Horizontal Shadow:</label>
+      <input type="range" id="x-shadow" min="-100" max="100" value="5">
+    </div>
+    <div class="settings__range">
+      <label for="y-shadow">Vertical Shadow:</label>
+      <input type="range" id="y-shadow" min="-100" max="100" value="15">
+    </div>
+    <div class="settings__range">
+      <label for="blur-r">Blur Radius:</label>
+      <input type="range" id="blur-r" min="0" max="100" value="30">
+    </div>
+    <div class="settings__range">
+      <label for="spread-r">Spread Radius:</label>
+      <input type="range" id="spread-r" min="-50" max="50" value="5">
+    </div>
+    <div class="settings__range">
+      <label for="border-r">Border Radius:</label>
+      <input type="range" id="border-r" min="0" max="100" step="1" value="30">
+    </div>
+    <div class="settings__range">
+      <label for="shadow-opacity">Shadow Opacity:</label>
+      <input type="range" id="shadow-opacity" min="0" max="1" step="0.1" value="0.5">
+    </div>
+
+    <div class="settings__input">
+      <label for="inset-shadow">Inset Shadow:</label>
+      <input type="checkbox" id="inset-shadow">
+    </div>
+
+    <div class="settings__color" id="color-wrapper">
+      <label for="shadow-color">Shadow Color:</label>
+      <input type="color" id="shadow-color">
+    </div>
+
+  </div>
+
+  <div class="code">
+    <textarea id="styles" rows="2"></textarea>
+    <button id="copy-styles" onclick="copyStyles()">Copy</button>
+  </div>
+
+</div>
+<!-- partial -->
+  <script>
+    const preview = document.getElementById("preview");
+const styles = document.getElementById("styles");
+const ranges = document.querySelectorAll(".settings input");
+const copyButton = document.getElementById("copy-styles");
+
+// Add event listener to each range input
+ranges.forEach((slider) => {
+  slider.addEventListener("input", generateStyles);
+});
+
+// Function to generate and update styles
+function generateStyles() {
+  const xShadow = getValue("x-shadow");
+  const yShadow = getValue("y-shadow");
+  const blurRadius = getValue("blur-r");
+  const spreadRadius = getValue("spread-r");
+  const shadowColor = getValue("shadow-color");
+  const shadowOpacity = getValue("shadow-opacity");
+  const shadowInset = getValue("inset-shadow") === "true";
+  const borderRadius = getValue("border-r");
+
+  // Create the box shadow CSS property value
+  const boxShadow = `${
+    shadowInset ? "inset " : ""
+  }${xShadow}px ${yShadow}px ${blurRadius}px ${spreadRadius}px ${hexToRgba(
+    shadowColor,
+    shadowOpacity
+  )}`;
+
+  // Update the preview element styles
+  preview.style.boxShadow = boxShadow;
+  preview.style.borderRadius = `${borderRadius}px`;
+
+  // Update textarea with generated styles
+  styles.textContent = `box-shadow: ${boxShadow};\nborder-radius: ${borderRadius}px;`;
+}
+
+// Function to get the value of an input element
+function getValue(id) {
+  return document.getElementById(id).value;
+}
+
+// Function to convert hex color and opacity to rgba format
+function hexToRgba(shadowColor, shadowOpacity) {
+  const r = parseInt(shadowColor.substr(1, 2), 16);
+  const g = parseInt(shadowColor.substr(3, 2), 16);
+  const b = parseInt(shadowColor.substr(5, 2), 16);
+
+  return `rgba(${r}, ${g}, ${b}, ${shadowOpacity})`;
+}
+
+// Function to copy the generated styles
+function copyStyles() {
+  styles.select();
+  document.execCommand("copy");
+  copyButton.innerText = "Copied!";
+  setTimeout(() => {
+    copyButton.innerText = "Copy";
+  }, 500);
+}
+
+copyButton.addEventListener("click", copyStyles);
+
+generateStyles();
+  </script>
+
+</body>
+</html>
