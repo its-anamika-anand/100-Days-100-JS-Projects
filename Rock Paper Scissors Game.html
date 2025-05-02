@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anamika Anand-Rock Paper Scissors</title>
+  <!-- <link rel="stylesheet" href="styles.css"> -->
+</head>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to right, #e0a3ea, #3eccd3);
+  color: #333;
+}
+
+.game-container {
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 600px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.hands {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+}
+
+.hand {
+  font-size: 80px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.choices {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+}
+
+.choice {
+  font-size: 16px;
+  padding: 10px 20px;
+  background: #97eee1;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.choice:hover {
+  background: #fac1d8;
+}
+
+.result {
+  font-size: 24px;
+  margin-top: 20px;
+}
+
+.hand.animate {
+  transform: translateY(-20px);
+}
+
+</style>
+<body>
+  <div class="game-container">
+    <h1>Rock, Paper, Scissors</h1>
+    <div class="hands">
+      <div id="player-hand" class="hand">✊</div>
+      <div id="computer-hand" class="hand">✊</div>
+    </div>
+    <div class="choices">
+      <button class="choice" data-choice="rock">✊ Rock</button>
+      <button class="choice" data-choice="paper">✋ Paper</button>
+      <button class="choice" data-choice="scissors">✌️ Scissors</button>
+    </div>
+    <div id="result" class="result"></div>
+  </div>
+  <script>
+const choices = ["rock", "paper", "scissors"];
+const playerHand = document.getElementById("player-hand");
+const computerHand = document.getElementById("computer-hand");
+const resultDisplay = document.getElementById("result");
+const buttons = document.querySelectorAll(".choice");
+
+buttons.forEach(button => {
+  button.addEventListener("click", () => {
+    const playerChoice = button.getAttribute("data-choice");
+    const computerChoice = choices[Math.floor(Math.random() * 3)];
+
+    // Animate hands
+    playerHand.classList.add("animate");
+    computerHand.classList.add("animate");
+
+    setTimeout(() => {
+      // Update hand visuals
+      playerHand.textContent = getHandSymbol(playerChoice);
+      computerHand.textContent = getHandSymbol(computerChoice);
+
+      // Remove animation class
+      playerHand.classList.remove("animate");
+      computerHand.classList.remove("animate");
+
+      // Determine winner
+      const winner = getWinner(playerChoice, computerChoice);
+      resultDisplay.textContent = winner;
+    }, 500);
+  });
+});
+
+function getHandSymbol(choice) {
+  if (choice === "rock") return "✊";
+  if (choice === "paper") return "✋";
+  if (choice === "scissors") return "✌️";
+}
+
+function getWinner(player, computer) {
+  if (player === computer) return "It's a tie!";
+  if (
+    (player === "rock" && computer === "scissors") ||
+    (player === "paper" && computer === "rock") ||
+    (player === "scissors" && computer === "paper")
+  ) {
+    return "You win!";
+  }
+  return "Computer wins!";
+}
+
+  </script>
+</body>
+</html>
