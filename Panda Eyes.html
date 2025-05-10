@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Panda Eyes</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
+}
+
+.panda {
+  background-color: #fff;
+  border-radius: 50%;
+  position: relative;
+  height: 170px;
+  width: 170px;
+}
+.panda .ear {
+  background-color: #000;
+  border-radius: 50%;
+  position: absolute;
+  top: 5px;
+  height: 50px;
+  width: 50px;
+  z-index: -1;
+}
+.panda .ear.left {
+  left: 0;
+}
+.panda .ear.right {
+  right: 0;
+}
+.panda .eye {
+  background-color: #000;
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  height: 50px;
+  width: 40px;
+}
+.panda .eye.left {
+  border-radius: 100% 60% 80% 60%;
+  transform: translateX(calc(-50% - 35px));
+}
+.panda .eye.right {
+  border-radius: 60% 100% 60% 80%;
+  transform: translateX(calc(-50% + 35px));
+}
+.panda .eye .eye-roll {
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  height: 12px;
+  width: 12px;
+  transform-origin: center left;
+}
+.panda .nose {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%);
+}
+.panda .mouth {
+  background: transparent;
+  border-radius: 0 0 50% 50%;
+  border: 2px solid transparent;
+  border-bottom: 2px solid #000;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%);
+  height: 50px;
+  width: 50px;
+}
+  </style>
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="panda">
+  <div class="ear left"></div>
+  <div class="ear right"></div>
+
+  <div class="eye left">
+    <div class="eye-roll"></div>
+  </div>
+  <div class="eye right">
+    <div class="eye-roll"></div>
+  </div>
+
+  <div class="nose">
+    <i class="fa fa-heart"></i>
+  </div>
+
+  <div class="mouth"></div>
+</div>
+<!-- partial -->
+  <script>
+   const eyes = document.querySelectorAll(".eye-roll");
+
+const rotateEyes = (eye, mouseX, mouseY) => {
+  const eyeRect = eye.getBoundingClientRect();
+  const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+  const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+  const radian = Math.atan2(mouseX - eyeCenterX, mouseY - eyeCenterY);
+  const degree = radian * (180 / Math.PI) * -1 + 90;
+  eye.style.transform = `rotate(${degree}deg)`;
+};
+
+window.addEventListener("mousemove", (e) => {
+  const mouseX = e.pageX;
+  const mouseY = e.pageY;
+
+  eyes.forEach((eye) => {
+    rotateEyes(eye, mouseX, mouseY);
+  });
+}); 
+  </script>
+
+</body>
+</html>
