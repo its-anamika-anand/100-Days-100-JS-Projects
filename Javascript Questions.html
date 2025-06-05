@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .content {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  padding: 2em;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+}
+
+.accordion-item {
+  background-color: #fff;
+  margin: 1em 0;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.accordion-item-header {
+  padding: 1em;
+  cursor: pointer;
+  background-color: #f6d365;
+  font-weight: bold;
+}
+
+.accordion-item-body {
+  padding: 1em;
+  display: none;
+  background-color: #fda085;
+}
+
+.accordion-item.active .accordion-item-body {
+  display: block;
+}
+
+#next-button {
+  margin-top: 1em;
+  padding: 0.5em 1em;
+  background-color: #ff6f61;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+</style>
+<body>
+    <div class="content">
+  <div class="title">JavaScript</div>
+  <div id="accordion-container">
+    <!-- Accordion items will be injected here -->
+  </div>
+  <button id="next-button">Next</button>
+</div>
+
+<script>
+    const questions = [
+  { title: "What Is JavaScript?", content: "JavaScript is a versatile programming language used primarily for web development." },
+  { title: "Java & JavaScript", content: "Despite similar names, Java and JavaScript are distinct languages with different use cases." },
+  { title: "Can I Learn JavaScript Without Java?", content: "Absolutely! JavaScript can be learned independently of Java." },
+  { title: "JavaScript & EcmaScript", content: "ECMAScript is the standard upon which JavaScript is based." },
+  { title: "What are JavaScript Data Types?", content: "JavaScript includes data types like String, Number, Boolean, Object, and more." },
+  { title: "What is a Closure in JavaScript?", content: "A closure is a function that has access to its outer function scope even after the outer function has returned." },
+  { title: "Explain Event Bubbling", content: "Event bubbling is a type of event propagation where the event starts from the deepest element and propagates up to the parent elements." },
+  { title: "What is the use of 'this' keyword?", content: "The 'this' keyword refers to the object it belongs to, varying based on the context in which it's used." }
+];
+
+let currentPage = 0;
+const itemsPerPage = 4;
+
+function renderAccordionItems() {
+  const container = document.getElementById('accordion-container');
+  container.innerHTML = '';
+  const start = currentPage * itemsPerPage;
+  const end = start + itemsPerPage;
+  const currentItems = questions.slice(start, end);
+
+  currentItems.forEach(item => {
+    const accordionItem = document.createElement('div');
+    accordionItem.className = 'accordion-item';
+
+    const header = document.createElement('div');
+    header.className = 'accordion-item-header';
+    header.textContent = item.title;
+    header.addEventListener('click', () => {
+      accordionItem.classList.toggle('active');
+    });
+
+    const body = document.createElement('div');
+    body.className = 'accordion-item-body';
+    body.textContent = item.content;
+
+    accordionItem.appendChild(header);
+    accordionItem.appendChild(body);
+    container.appendChild(accordionItem);
+  });
+
+  // Hide the "Next" button if there are no more items
+  const nextButton = document.getElementById('next-button');
+  if ((currentPage + 1) * itemsPerPage >= questions.length) {
+    nextButton.style.display = 'none';
+  } else {
+    nextButton.style.display = 'inline-block';
+  }
+}
+
+document.getElementById('next-button').addEventListener('click', () => {
+  currentPage++;
+  renderAccordionItems();
+});
+
+// Initial render
+renderAccordionItems();
+
+</script>
+</body>
+</html>
