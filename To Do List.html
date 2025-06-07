@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced To-Do List with Date and Time</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #f3e5f5, #e1bee7);
+            color: #4a148c;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .todo-container {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .todo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .todo-header h1 {
+            font-size: 24px;
+            margin: 0;
+            color: #6a1b9a;
+        }
+
+        .todo-header button {
+            background-color: #6a1b9a;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .todo-header button:hover {
+            background-color: #4a148c;
+        }
+
+        .todo-input {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .todo-input input, .todo-input button {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .todo-input button {
+            background-color: #4a148c;
+            color: white;
+            cursor: pointer;
+        }
+
+        .todo-input button:hover {
+            background-color: #6a1b9a;
+        }
+
+        .todo-list {
+            list-style: none;
+            padding: 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f3e5f5;
+            border: 1px solid #e1bee7;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .todo-item span {
+            flex-grow: 1;
+            padding-left: 10px;
+        }
+
+        .todo-item .actions button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .todo-item .actions .edit {
+            color: #039be5;
+        }
+
+        .todo-item .actions .delete {
+            color: #d32f2f;
+        }
+
+        .todo-item .actions button:hover {
+            opacity: 0.8;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .footer button {
+            background-color: #6a1b9a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .footer button:hover {
+            background-color: #4a148c;
+        }
+
+        .calendar-container {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            padding: 20px;
+        }
+
+        .calendar-container h2 {
+            text-align: center;
+            color: #6a1b9a;
+            margin: 0 0 20px 0;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f3e5f5;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 14px;
+            color: #4a148c;
+        }
+
+        .calendar .day {
+            background-color: #6a1b9a;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <div class="todo-header">
+            <h1>To-Do List</h1>
+            <button onclick="clearCompleted()">Clear Completed</button>
+        </div>
+        <div class="todo-input">
+            <input type="text" id="todo-input" placeholder="Enter a new task">
+            <input type="datetime-local" id="todo-datetime">
+            <button onclick="addTodo()">Add</button>
+        </div>
+        <ul class="todo-list" id="todo-list">
+        </ul>
+        <div class="footer">
+            <button onclick="clearAll()">Clear All</button>
+        </div>
+    </div>
+    <p>Copy Right: Anamika Anand</p>
+
+    <!-- <div class="calendar-container">
+        <h2>Calendar</h2>
+        <div class="calendar" id="calendar"> -->
+            <!-- Calendar days will be generated dynamically -->
+        </div>
+    </div>
+
+    <script>
+        const todoList = document.getElementById('todo-list');
+        const calendar = document.getElementById('calendar');
+
+        function addTodo() {
+            const taskInput = document.getElementById('todo-input');
+            const dateTimeInput = document.getElementById('todo-datetime');
+            const taskText = taskInput.value.trim();
+            const dateTime = dateTimeInput.value;
+
+            if (!taskText || !dateTime) return;
+
+            const listItem = document.createElement('li');
+            listItem.className = 'todo-item';
+            listItem.innerHTML = `
+                <input type="checkbox" onchange="toggleComplete(this)">
+                <span>${taskText} <small>(${new Date(dateTime).toLocaleString()})</small></span>
+                <div class="actions">
+                    <button class="edit" onclick="editTask(this)">&#9998;</button>
+                    <button class="delete" onclick="deleteTask(this)">&#10006;</button>
+                </div>
+            `;
+            todoList.appendChild(listItem);
+            taskInput.value = '';
+            dateTimeInput.value = '';
+        }
+
+        function toggleComplete(checkbox) {
+            const listItem = checkbox.closest('.todo-item');
+            if (checkbox.checked) {
+                listItem.style.textDecoration = 'line-through';
+                listItem.style.opacity = '0.6';
+            } else {
+                listItem.style.textDecoration = 'none';
+                listItem.style.opacity = '1';
+            }
+        }
+
+        function editTask(button) {
+            const listItem = button.closest('.todo-item');
+            const taskSpan = listItem.querySelector('span');
+            const currentText = taskSpan.textContent.split(' (')[0];
+            const newTask = prompt('Edit task:', currentText);
+            if (newTask !== null) {
+                taskSpan.innerHTML = `${newTask} <small>${taskSpan.querySelector('small').textContent}</small>`;
+            }
+        }
+
+        function deleteTask(button) {
+            const listItem = button.closest('.todo-item');
+            todoList.removeChild(listItem);
+        }
+
+        function clearCompleted() {
+            const completedTasks = document.querySelectorAll('.todo-item input[type="checkbox"]:checked');
+            completedTasks.forEach(task => {
+                const listItem = task.closest('.todo-item');
+                todoList.removeChild(listItem);
+            });
+        }
+
+        function clearAll() {
+            todoList.innerHTML = '';
+        }
+
+        function generateCalendar() {
+            const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+            const firstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay();
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDiv = document.createElement('div');
+                calendar.appendChild(emptyDiv);
+            }
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day';
+                dayDiv.textContent = i;
+                calendar.appendChild(dayDiv);
+            }
+        }
+
+        generateCalendar();
+
+        // Simulate fetching todos from a server
+        fetch('https://api.example.com/todos')
+           .then(response => response.json())
+           .then(data => {
+            data.forEach(todo => {
+                const listItem = document.createElement('li');
+                listItem.className = 'todo-item';
+                listItem.innerHTML = `
+                    <input type="checkbox" ${todo.completed? 'checked' : ''} onchange="toggleComplete(this)">
+                    <span>${todo.task} <small>(${new Date(todo.dueDate).toLocaleString()})</small></span>
+                    <div class="actions">
+                        <button class="edit" onclick="editTask(this)">&#9998;</button>
+                        <button class="delete" onclick="deleteTask(this)">&#10006;</button>
+                    </div>
+                `;
+                todoList.appendChild(listItem);
+            });
+        });
+
+        // Simulate fetching calendar events from a server
+        fetch('https://api.example.com/events')
+           .then(response => response.json())
+           .then(data => {
+            data.forEach(event => {
+                const eventDiv = document.createElement('div');
+                eventDiv.className = 'day';
+                eventDiv.textContent = event.date;
+                eventDiv.style.backgroundColor = event.color;
+                calendar.appendChild(eventDiv);
+            });
+        });
+
+        // Simulate updating the calendar with new events
+        setInterval(() => {
+            fetch('https://api.example.com/events')
+               .then(response => response.json())
+               .then(data => {
+                    calendar.innerHTML = '';
+                    generateCalendar();
+                    data.forEach(event => {
+                        const eventDiv = document.createElement('div');
+                        eventDiv.className = 'day';
+                        eventDiv.textContent = event.date;
+                        eventDiv.style.backgroundColor = event.color;
+                        calendar.appendChild(eventDiv);
+                    });
+                });
+        }, 60000); // Update the calendar every minute
+    </script>
+</body>
+</html>
