@@ -1,61 +1,19 @@
-// Get DOM elements
-const input = document.getElementById("input");
-const button = document.getElementById("submit");
-const errorMessage = document.getElementById("error");
-const output = document.getElementById("output");
+"use strict";
 
-// Roman numeral object
-const romanObject = {
-  M: 1000,
-  CM: 900,
-  D: 500,
-  CD: 400,
-  C: 100,
-  XC: 90,
-  L: 50,
-  XL: 40,
-  XXX: 30,
-  XX: 20,
-  X: 10,
-  IX: 9,
-  V: 5,
-  IV: 4,
-  I: 1
-};
+const celsiusInput = document.getElementById("celsius");
+const fahrenheitInput = document.getElementById("fahrenheit");
 
-// Add event listener to the button
-button.addEventListener("click", () => {
-  const inputValue = input.value.trim();
+const convertCelsiusToFahrenheit = (celsius) => (celsius * 9) / 5 + 32;
+const convertFahrenheitToCelsius = (fahrenheit) => ((fahrenheit - 32) * 5) / 9;
 
-  if (isValidInput(inputValue)) {
-    const result = convertToRoman(parseInt(inputValue));
-    output.innerHTML = result;
-    errorMessage.innerHTML = "";
-  } else {
-    errorMessage.innerHTML = "Invalid Input";
-    output.innerHTML = "";
-  }
-
-  input.value = "";
+celsiusInput.addEventListener("input", () => {
+  const celsiusValue = parseFloat(celsiusInput.value);
+  const fahrenheitValue = convertCelsiusToFahrenheit(celsiusValue);
+  fahrenheitInput.value = fahrenheitValue.toFixed(2);
 });
 
-// Function to validate input
-function isValidInput(inputValue) {
-  const number = parseInt(inputValue);
-  return !isNaN(number) && number >= 1 && number <= 9999;
-}
-
-// Function to convert number to Roman numeral
-function convertToRoman(num) {
-  let result = "";
-  const romanValues = Object.keys(romanObject);
-
-  romanValues.forEach((key) => {
-    while (romanObject[key] <= num) {
-      num -= romanObject[key];
-      result += key;
-    }
-  });
-
-  return result;
-}
+fahrenheitInput.addEventListener("input", () => {
+  const fahrenheitValue = parseFloat(fahrenheitInput.value);
+  const celsiusValue = convertFahrenheitToCelsius(fahrenheitValue);
+  celsiusInput.value = celsiusValue.toFixed(2);
+});
