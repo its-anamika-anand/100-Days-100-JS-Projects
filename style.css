@@ -14,48 +14,25 @@ body {
   font-family: "Mulish", sans-serif;
   color: #fff;
   line-height: 1.5;
-  min-height: 100vh;
-  position: relative;
+}
+
+section {
+  background-color: #0f172a;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-color: #0f172a;
 }
-
-.converter {
-  width: calc(100% - 30px);
-  max-width: 640px;
-  margin: 15px;
-  padding: 30px 20px;
-  border: 1px solid #222f43;
-  border-radius: 20px;
-  background-color: #131c31;
-  color: #b9e0f2;
-  display: flex;
-  justify-content: space-between;
-  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.05);
+section.online {
+  background-color: #4a89dc;
 }
-.converter__box {
-  width: 48%;
-}
-.converter label {
-  display: block;
-  font-size: 1.6rem;
-  margin-bottom: 5px;
-}
-.converter input {
-  height: 50px;
-  width: 100%;
-  font-size: 1.6rem;
-  font-family: inherit;
-  padding: 0 15px;
-  background: transparent;
+section h1 {
   color: #fff;
-  border: 2px solid #222f43;
-  border-radius: 6px;
-  transition: all 0.3s ease;
+  font-size: 3.5rem;
+  font-weight: 600;
 }
-.converter input:hover, .converter input:focus {
-  border-color: #fff;
+section p {
+  color: #fff;
+  font-size: 2rem;
 }
