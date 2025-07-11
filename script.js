@@ -1,47 +1,71 @@
-const statusDisplay = document.getElementById("status");
-const bgColor = document.getElementById("main");
+"use strict";
 
-function setColor(online) {
-  if (online) {
-    bgColor.classList.add("online");
+function createCalendar(year, month) {
+  const date = new Date(year, month - 1);
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]; // Adjust the order of days
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
+
+  const yearAndMonth = `${monthNames[date.getMonth()]} ${year}`;
+  document.getElementById("info").textContent = yearAndMonth;
+
+  const tableDays = document.getElementById("days");
+  for (const day of days) {
+    const td = document.createElement("td");
+    td.textContent = day;
+    tableDays.appendChild(td);
+  }
+
+  let firstDay = new Date(year, month - 1, 1).getDay();
+  // Adjust the first day index to start with Monday
+  if (firstDay === 0) {
+    firstDay = 6;
   } else {
-    bgColor.classList.remove("online");
+    firstDay -= 1;
+  }
+
+  const numberOfDays = new Date(year, month, 0).getDate();
+
+  const tableDates = document.getElementById("dates");
+  for (let i = 0; i < firstDay; i++) {
+    const td = document.createElement("td");
+    tableDates.appendChild(td);
+  }
+
+  const today = new Date();
+  for (let i = 1; i <= numberOfDays; i++) {
+    const td = document.createElement("td");
+    td.textContent = i;
+    tableDates.appendChild(td);
+
+    if (
+      year === today.getFullYear() &&
+      month - 1 === today.getMonth() &&
+      i === today.getDate()
+    ) {
+      td.classList.add("current-day");
+    }
+
+    if ((i + firstDay) % 7 === 0) {
+      const tr = document.createElement("tr");
+      tableDates.appendChild(tr);
+    }
   }
 }
 
-async function checkConnection() {
-  try {
-    const fetchResult = await fetch(
-      "https://upload.wikimedia.org/wikipedia/en/thumb/7/7d/Lenna_%28test_image%29.png/440px-Lenna_%28test_image%29.png?time=" +
-        new Date().getTime()
-    );
-    const online = fetchResult.status >= 200 && fetchResult.status < 300;
-    setColor(online);
-    return online;
-  } catch (error) {
-    console.error(error);
-    statusDisplay.textContent = "OOPS!!! Your Internet Connection is Down.";
-    setColor(false);
-    return false;
-  }
-}
+const currentYear = new Date().getFullYear();
+const currentMonth = new Date().getMonth() + 1;
 
-// Monitor the connection
-setInterval(async () => {
-  const online = await checkConnection();
-  if (online) {
-    statusDisplay.textContent = "You're ONLINE!!! Connection looks good.";
-  } else {
-    statusDisplay.textContent = "Offline";
-  }
-}, 5000);
-
-// Check Connection When Page Loads
-window.addEventListener("load", async (event) => {
-  const online = await checkConnection();
-  if (online) {
-    statusDisplay.textContent = "Online";
-  } else {
-    statusDisplay.textContent = "Offline";
-  }
-});
+createCalendar(currentYear, currentMonth);
