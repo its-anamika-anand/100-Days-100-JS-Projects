@@ -1,22 +1,41 @@
-const loadText = document.querySelector(".loading-text");
-const bg = document.querySelector(".bg");
+const billInput = document.getElementById("bill");
+const tipInput = document.getElementById("tip");
+const noOfPeopleInput = document.getElementById("no-of-people");
+const tipAmountOutput = document.getElementById("tip-amount");
+const totalAmountOutput = document.getElementById("total-amount");
+const tipPercentOutput = document.getElementById("tip-percent");
+const splitNumOutput = document.getElementById("split-num");
+const tipPerPersonOutput = document.getElementById("tip-per-person");
+const totalPerPersonOutput = document.getElementById("total-per-person");
 
-let load = 0;
+const sliders = document.querySelectorAll("input[type='range']");
 
-let int = setInterval(blurring, 30);
+sliders.forEach(function (slider) {
+  slider.addEventListener("input", calculateTip);
+});
 
-function blurring() {
-  load++;
+billInput.addEventListener("input", calculateTip);
+tipInput.addEventListener("input", calculateTip);
+noOfPeopleInput.addEventListener("input", calculateTip);
 
-  if (load > 99) {
-    clearInterval(int);
-  }
+function calculateTip() {
+  const bill = parseFloat(billInput.value);
+  const tipPercent = parseFloat(tipInput.value);
+  const noOfPeople = parseInt(noOfPeopleInput.value);
 
-  loadText.innerText = `${load}%`;
-  loadText.style.opacity = scale(load, 0, 100, 1, 0);
-  bg.style.filter = `blur(${scale(load, 0, 100, 30, 0)}px)`;
+  const totalTip = (bill * (tipPercent / 100)).toFixed(2);
+  const total = (bill + parseFloat(totalTip)).toFixed(2);
+  const tipPerPerson = (totalTip / noOfPeople).toFixed(2);
+  const totalPerPerson = (total / noOfPeople).toFixed(2);
+
+  billInput.value = bill.toFixed(2);
+
+  tipAmountOutput.textContent = `${totalTip} €`;
+  totalAmountOutput.textContent = `${total} €`;
+  tipPercentOutput.textContent = `${tipPercent}%`;
+  splitNumOutput.textContent = noOfPeople;
+  tipPerPersonOutput.textContent = `${tipPerPerson} €`;
+  totalPerPersonOutput.textContent = `${totalPerPerson} €`;
 }
 
-const scale = (num, in_min, in_max, out_min, out_max) => {
-  return ((num - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
-};
+calculateTip();
