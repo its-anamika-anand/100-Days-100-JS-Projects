@@ -1,141 +1,125 @@
-//Initial References
-let timerRef = document.querySelector(".timer");
-const hourInput = document.getElementById("hourInput");
-const minuteInput = document.getElementById("minuteInput");
-const activeAlarms = document.querySelector(".activeAlarms");
-const setAlarm = document.getElementById("set");
-let alarmsArray = [];
-let alarmSound = new Audio(
-  "https://assets.mixkit.co/active_storage/sfx/1003/1003-preview.mp3"
-);
-let initialHour = 0,
-  initialMinute = 0,
-  alarmIndex = 0;
-//Append zeroes for single digit
-const appendZero = (value) => (value < 10 ? "0" + value : value);
-//Search for value in object
-const searchObject = (parameter, value) => {
-  let alarmObject,
-    objIndex,
-    exists = false;
-  alarmsArray.forEach((alarm, index) => {
-    if (alarm[parameter] == value) {
-      exists = true;
-      alarmObject = alarm;
-      objIndex = index;
-      return false;
-    }
-  });
-  return [exists, alarmObject, objIndex];
+const moviesObject = {
+  "👸👹🌹": "Beauty And The Beast",
+  "🧙👓⚡": "Harry Potter",
+  "🦇🃏 ": "Joker",
+  "👩‍❤️‍👨🚢🥶": "Titanic",
+  "👻👻🔫": "Ghostbusters",
+  "🐜👨 ": "Antman",
+  "🐀👨‍🍳 ": "Ratatouille",
+  "🖊️📓👩‍❤️‍👨": "The Notebook",
+  "😈👗👠": "Devil Wears Prada",
+  "🤥🦗 ": "Pinocchio",
+  "🎄😠🟢": "The Grinch",
+  "🔍🐟 ": "Finding Nemo",
+  "🌌🏀": "Space Jam",
+  "🏠😱": "Home Alone",
+  "🤠👨‍🚀": "Toy Story",
+  "🥋🐼": "Kung Fu Panda",
+  "👦👴🚗🕖": "Back To The Future",
+  "🏰👭❄️": "Frozen",
+  "🐶🍝🐶💑": "Lady And The Tramp",
+  "👸💤": "Sleeping Beauty",
+  "🕷️🚶": "Spider Man",
+  "🐢🐀👊🏻🍕": "Ninja Turtles"
 };
-//Display Time
-function displayTimer() {
-  let date = new Date();
-  let [hours, minutes, seconds] = [
-    appendZero(date.getHours()),
-    appendZero(date.getMinutes()),
-    appendZero(date.getSeconds())
-  ];
-  //Display time
-  timerRef.innerHTML = `${hours}:${minutes}:${seconds}`;
-  //Alarm
-  alarmsArray.forEach((alarm, index) => {
-    if (alarm.isActive) {
-      if (`${alarm.alarmHour}:${alarm.alarmMinute}` === `${hours}:${minutes}`) {
-        alarmSound.play();
-        alarmSound.loop = true;
-      }
-    }
+
+const container = document.querySelector(".guess__emoji");
+const controls = document.querySelector(".controls");
+const startButton = document.getElementById("start");
+const letterContainer = document.getElementById("letters");
+const userInputSection = document.getElementById("userInput");
+const resultText = document.getElementById("result");
+const hints = Object.keys(moviesObject);
+
+let randomHint = "";
+let randomWord = "";
+let winCount = 0;
+let lossCount = 5;
+
+const generateRandomValue = (array) => Math.floor(Math.random() * array.length);
+
+const blocker = () => {
+  const letterButtons = document.querySelectorAll(".letters");
+  letterButtons.forEach((button) => {
+    button.disabled = true;
   });
-}
-const inputCheck = (inputValue) => {
-  inputValue = parseInt(inputValue);
-  if (inputValue < 10) {
-    inputValue = appendZero(inputValue);
-  }
-  return inputValue;
+  stopGame();
 };
-hourInput.addEventListener("input", () => {
-  hourInput.value = inputCheck(hourInput.value);
+
+startButton.addEventListener("click", () => {
+  controls.classList.add("hide");
+  init();
 });
-minuteInput.addEventListener("input", () => {
-  minuteInput.value = inputCheck(minuteInput.value);
-});
-//Create alarm div
-const createAlarm = (alarmObj) => {
-  //Keys from object
-  const { id, alarmHour, alarmMinute } = alarmObj;
-  //Alarm div
-  let alarmDiv = document.createElement("div");
-  alarmDiv.classList.add("alarm__item");
-  alarmDiv.setAttribute("data-id", id);
-  alarmDiv.innerHTML = `<span>${alarmHour}: ${alarmMinute}</span>`;
-  //checkbox
-  let checkbox = document.createElement("input");
-  checkbox.setAttribute("type", "checkbox");
-  checkbox.addEventListener("click", (e) => {
-    if (e.target.checked) {
-      startAlarm(e);
+
+const stopGame = () => {
+  controls.classList.remove("hide");
+};
+
+const generateWord = () => {
+  letterContainer.classList.remove("hide");
+  userInputSection.innerText = "";
+  randomHint = hints[generateRandomValue(hints)];
+  randomWord = moviesObject[randomHint];
+  container.innerHTML = `<div id="movieHint">${randomHint}</div>`;
+  let displayItem = "";
+  randomWord.split("").forEach((value) => {
+    if (value == " ") {
+      winCount += 1;
+      displayItem += `<span class="inputSpace">&nbsp;</span>`;
     } else {
-      stopAlarm(e);
+      displayItem += `<span class="inputSpace">_</span>`;
     }
   });
-  alarmDiv.appendChild(checkbox);
-  //Delete button
-  let deleteButton = document.createElement("button");
-  deleteButton.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
-  deleteButton.classList.add("deleteButton");
-  deleteButton.addEventListener("click", (e) => deleteAlarm(e));
-  alarmDiv.appendChild(deleteButton);
-  activeAlarms.appendChild(alarmDiv);
+  userInputSection.innerHTML = displayItem;
 };
-//Set Alarm
-setAlarm.addEventListener("click", () => {
-  alarmIndex += 1;
-  //alarmObject
-  let alarmObj = {};
-  alarmObj.id = `${alarmIndex}_${hourInput.value}_${minuteInput.value}`;
-  alarmObj.alarmHour = hourInput.value;
-  alarmObj.alarmMinute = minuteInput.value;
-  alarmObj.isActive = false;
-  console.log(alarmObj);
-  alarmsArray.push(alarmObj);
-  createAlarm(alarmObj);
-  hourInput.value = appendZero(initialHour);
-  minuteInput.value = appendZero(initialMinute);
-});
-//Start Alarm
-const startAlarm = (e) => {
-  let searchId = e.target.parentElement.getAttribute("data-id");
-  let [exists, obj, index] = searchObject("id", searchId);
-  if (exists) {
-    alarmsArray[index].isActive = true;
+
+const init = () => {
+  winCount = 0;
+  lossCount = 5;
+  document.getElementById(
+    "chanceCount"
+  ).innerHTML = `<span>Tries Left:</span>${lossCount}`;
+  randomHint = null;
+  randomWord = "";
+  userInputSection.innerHTML = "";
+  letterContainer.innerHTML = "";
+  generateWord();
+  for (let i = 65; i < 91; i++) {
+    const button = document.createElement("button");
+    button.classList.add("letter");
+    button.innerText = String.fromCharCode(i);
+    button.addEventListener("click", () => {
+      const charArray = randomWord.toUpperCase().split("");
+      const inputSpace = document.getElementsByClassName("inputSpace");
+      if (charArray.includes(button.innerText)) {
+        charArray.forEach((char, index) => {
+          if (char === button.innerText) {
+            button.classList.add("used");
+            inputSpace[index].innerText = char;
+            winCount += 1;
+            if (winCount == charArray.length) {
+              resultText.innerHTML = "Congrats! You guessed it!";
+              blocker();
+            }
+          }
+        });
+      } else {
+        lossCount -= 1;
+        document.getElementById(
+          "chanceCount"
+        ).innerHTML = `<span>Tries Left:</span> ${lossCount}`;
+        button.classList.add("used");
+        if (lossCount == 0) {
+          resultText.innerHTML = "Game Over";
+          blocker();
+        }
+      }
+      button.disabled = true;
+    });
+    letterContainer.appendChild(button);
   }
 };
-//Stop alarm
-const stopAlarm = (e) => {
-  let searchId = e.target.parentElement.getAttribute("data-id");
-  let [exists, obj, index] = searchObject("id", searchId);
-  if (exists) {
-    alarmsArray[index].isActive = false;
-    alarmSound.pause();
-  }
-};
-//delete alarm
-const deleteAlarm = (e) => {
-  let searchId = e.target.parentElement.parentElement.getAttribute("data-id");
-  let [exists, obj, index] = searchObject("id", searchId);
-  if (exists) {
-    e.target.parentElement.parentElement.remove();
-    alarmsArray.splice(index, 1);
-  }
-};
+
 window.onload = () => {
-  setInterval(displayTimer);
-  initialHour = 0;
-  initialMinute = 0;
-  alarmIndex = 0;
-  alarmsArray = [];
-  hourInput.value = appendZero(initialHour);
-  minuteInput.value = appendZero(initialMinute);
+  init();
 };
