@@ -1,89 +1,164 @@
-const canvas = document.getElementById("scratch");
-const context = canvas.getContext("2d");
-const canvasRect = canvas.getBoundingClientRect();
-const scratchRadius = 12;
-let isDragged = false;
+const scoreEl = document.getElementById("score");
+const gameBoard = document.getElementById("game-board");
 
-// Define event types for mouse and touch
-const events = {
-  mouse: {
-    down: "mousedown",
-    move: "mousemove",
-    up: "mouseup",
-    leave: "mouseleave"
-  },
-  touch: {
-    down: "touchstart",
-    move: "touchmove",
-    up: "touchend"
+let board = Array.from({ length: 4 }, () => Array(4).fill(0));
+let score = 0;
+
+function startGame() {
+  board = Array.from({ length: 4 }, () => Array(4).fill(0));
+  addNewTile();
+  addNewTile();
+  updateBoard();
+  score = 0;
+  updateScore();
+}
+
+function addNewTile() {
+  const emptyTiles = [];
+
+  for (let row = 0; row < 4; row++) {
+    for (let col = 0; col < 4; col++) {
+      if (board[row][col] === 0) {
+        emptyTiles.push({ row, col });
+      }
+    }
   }
-};
 
-// Check if the device is touch-enabled
-const isTouchDevice = () => {
-  try {
-    document.createEvent("TouchEvent");
-    return true;
-  } catch (e) {
-    return false;
+  if (emptyTiles.length > 0) {
+    const randomIndex = Math.floor(Math.random() * emptyTiles.length);
+    const { row, col } = emptyTiles[randomIndex];
+    const newValue = Math.random() < 0.9 ? 2 : 4;
+
+    board[row][col] = newValue;
   }
-};
+}
 
-// Get the x and y positions relative to the canvas
-const getXY = (e) => {
-  const pageX = isTouchDevice() ? e.touches[0].pageX : e.pageX;
-  const pageY = isTouchDevice() ? e.touches[0].pageY : e.pageY;
-  return {
-    x: pageX - canvasRect.left,
-    y: pageY - canvasRect.top
-  };
-};
+function updateBoard() {
+  gameBoard.innerHTML = "";
 
-// Initialize the canvas with a gradient background
-const init = () => {
-  const gradientColor = context.createLinearGradient(0, 0, 135, 135);
-  gradientColor.addColorStop(0, "#0ea5ea");
-  gradientColor.addColorStop(1, "#0bd1d1");
-  context.fillStyle = gradientColor;
-  context.fillRect(0, 0, canvas.width, canvas.height);
-};
+  for (let row = 0; row < 4; row++) {
+    for (let col = 0; col < 4; col++) {
+      const tileValue = board[row][col];
+      const tile = document.createElement("div");
 
-// Start scratching
-const startScratch = (event) => {
-  isDragged = true;
-  const { x, y } = getXY(event);
-  scratch(x, y);
-};
+      tile.className = "tile";
+      tile.textContent = tileValue !== 0 ? tileValue : "";
 
-// Continue scratching
-const continueScratch = (event) => {
-  if (!isTouchDevice()) {
-    event.preventDefault();
+      tile.style.backgroundColor = getTileColor(tileValue);
+      tile.style.color = [2, 4, 8].includes(tileValue) ? "#fff" : "#fff";
+
+      gameBoard.appendChild(tile);
+    }
   }
-  if (isDragged) {
-    const { x, y } = getXY(event);
-    scratch(x, y);
+}
+
+function getTileColor(value) {
+  if (value === 0) return "#4d4d4d";
+
+  const colors = [
+    "#4d4d4d",
+    "#D770AD",
+    "#3BAFDA",
+    "#37BC9B",
+    "#F6BB42",
+    "#4A89DC",
+    "#967ADC",
+    "#8CC152",
+    "#E9573F",
+    "#434A54"
+  ];
+
+  for (let i = 0; i < colors.length; i++) {
+    if (2 ** i === value) {
+      return colors[i];
+    }
   }
-};
 
-// Stop scratching
-const stopScratch = () => {
-  isDragged = false;
-};
+  return "#ecc95c";
+}
 
-// Scratch function
-const scratch = (x, y) => {
-  context.globalCompositeOperation = "destination-out";
-  context.beginPath();
-  context.arc(x, y, scratchRadius, 0, 2 * Math.PI);
-  context.fill();
-};
+function moveTiles(direction) {
+  let tileMoved = false;
+  const rowIndices = direction === "up" ? [0, 1, 2, 3] : [3, 2, 1, 0];
+  const colIndices = direction === "left" ? [0, 1, 2, 3] : [3, 2, 1, 0];
 
-// Event listeners
-canvas.addEventListener(events.mouse.down, startScratch);
-canvas.addEventListener(events.mouse.move, continueScratch);
-canvas.addEventListener(events.mouse.up, stopScratch);
-canvas.addEventListener(events.mouse.leave, stopScratch);
+  for (let row of rowIndices) {
+    for (let col of colIndices) {
+      const currentValue = board[row][col];
 
-// Initialize canvas
-window.onload = init;
+      if (currentValue === 0) continue;
+
+      let newRow = row;
+      let newCol = col;
+      let currentRow = row;
+      let currentCol = col;
+
+      while (true) {
+        if (direction === "up") {
+          newRow--;
+          currentRow = newRow + 1;
+        } else if (direction === "down") {
+          newRow++;
+          currentRow = newRow - 1;
+        } else if (direction === "left") {
+          newCol--;
+          currentCol = newCol + 1;
+        } else if (direction === "right") {
+          newCol++;
+          currentCol = newCol - 1;
+        }
+
+        if (newRow < 0 || newRow >= 4 || newCol < 0 || newCol >= 4) {
+          newRow -= direction === "up" ? -1 : 1;
+          newCol -= direction === "left" ? -1 : 1;
+          break;
+        }
+
+        const newValue = board[newRow][newCol];
+
+        if (newValue === 0) {
+          board[newRow][newCol] = currentValue;
+          board[currentRow][currentCol] = 0;
+          tileMoved = true;
+        } else if (newValue === currentValue) {
+          board[newRow][newCol] += currentValue;
+          board[currentRow][currentCol] = 0;
+          tileMoved = true;
+          score += currentValue;
+          updateScore();
+          break;
+        } else {
+          newRow -= direction === "up" ? -1 : 1;
+          newCol -= direction === "left" ? -1 : 1;
+          break;
+        }
+      }
+    }
+  }
+
+  if (tileMoved) {
+    addNewTile();
+    updateBoard();
+  }
+}
+
+function updateScore() {
+  scoreEl.innerText = score;
+}
+
+document.addEventListener("keydown", function (event) {
+  if (event.key === "ArrowUp") {
+    moveTiles("up");
+  } else if (event.key === "ArrowDown") {
+    moveTiles("down");
+  } else if (event.key === "ArrowLeft") {
+    moveTiles("left");
+  } else if (event.key === "ArrowRight") {
+    moveTiles("right");
+  }
+});
+
+const newGameBtn = document.getElementById("new-game-btn");
+newGameBtn.addEventListener("click", startGame);
+
+startGame();

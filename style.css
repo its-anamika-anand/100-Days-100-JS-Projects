@@ -12,60 +12,76 @@ html {
 
 body {
   font-family: "Mulish", sans-serif;
+  color: #fff;
   line-height: 1.5;
   min-height: 100vh;
-  background-color: #0f172a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.card {
-  width: 360px;
-  height: 360px;
   position: relative;
-  margin: 15px;
-  padding: 10px;
-  border: 1px solid #222f43;
-  border-radius: 20px;
-  background-color: #131c31;
-  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
-}
-
-.base,
-#scratch {
-  height: 300px;
-  width: 300px;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-  text-align: center;
-  cursor: grabbing;
-  border-radius: 10px;
-}
-
-.base {
-  background-color: #fff;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1.2em 2.5em rgba(16, 2, 96, 0.15);
-}
-.base h1 {
-  font-size: 3rem;
-  font-weight: 700;
-  color: #0ea5ea;
-}
-.base h2 {
-  font-size: 2rem;
-  color: #0f172a;
+  background-color: #0f172a;
 }
 
-#scratch {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
+.game {
+  width: calc(100% - 30px);
+  max-width: 480px;
+  text-align: center;
+}
+.game__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.game__title {
+  font-size: 7rem;
+  color: #0ea5ea;
+  font-weight: 700;
+  margin: 0;
+}
+.game .score {
+  background-color: #0ea5ea;
+  padding: 10px 15px;
+  border-radius: 6px;
+  color: #fff;
+}
+.game .score__title {
+  display: block;
+}
+.game .score__value {
+  font-size: 2rem;
+  display: block;
+  margin-top: 3px;
+}
+.game__start {
+  background-color: #0ea5ea;
+  color: #fff;
+  margin: 20px 0;
+  padding: 10px 20px;
+  font-size: 1.8rem;
+  font-family: inherit;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#game-board {
+  width: 480px;
+  height: 480px;
+  background-color: #000;
+  border: 6px solid #000;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+}
+#game-board .tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 700;
+  background-color: #4d4d4d;
+  border: 4px solid #000;
+  border-radius: 8px;
 }
