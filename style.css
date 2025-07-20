@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;0,700;1,400&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -6,69 +5,79 @@
 }
 
 html {
-  font-size: 62.5%;
   box-sizing: border-box;
 }
 
 body {
-  font-family: "Mulish", sans-serif;
-  line-height: 1.5;
-  min-height: 100vh;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  background-color: #026882;
+  min-height: 100vh;
+}
+body::after {
+  background-image: inherit;
+  background-position: center center;
+  background-size: cover;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  transition: 0.4s ease;
 }
 
-.sortable-list {
-  width: calc(100% - 30px);
-  max-width: 480px;
-  margin: 15px;
-  padding: 20px;
-  background-color: #131c31;
-  border: 1px solid #222f43;
-  border-radius: 20px;
-  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.05);
+body::before {
+  background-color: rgba(0, 0, 0, 0.7);
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
 }
-.sortable-list .item {
-  list-style: none;
-  display: flex;
-  cursor: move;
-  background-color: #0f172a;
-  align-items: center;
-  border: 1px solid #222f43;
-  border-radius: 6px;
-  padding: 10px 15px;
-  justify-content: space-between;
+
+.slider {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  position: relative;
+  overflow: hidden;
+  height: 70vh;
+  width: 70vw;
 }
-.sortable-list .item:not(:last-child) {
-  margin-bottom: 10px;
-}
-.sortable-list .item i {
-  color: #fff;
-  font-size: 1.8rem;
-}
-.sortable-list .item.dragging {
-  opacity: 0.75;
-}
-.sortable-list .item.dragging :where(.details, i) {
+.slider .slide {
+  background-position: center center;
+  background-size: cover;
+  position: absolute;
+  top: -15vh;
+  left: -15vw;
+  height: 100vh;
+  width: 100vw;
   opacity: 0;
+  transition: 0.4s ease;
+  z-index: 1;
 }
-.sortable-list .details {
-  display: flex;
-  align-items: center;
+.slider .slide.active {
+  opacity: 1;
 }
-.sortable-list .details img {
-  height: 45px;
-  width: 45px;
-  pointer-events: none;
-  margin-right: 15px;
-  object-fit: cover;
-  border-radius: 50%;
+.slider .arrow {
+  background-color: transparent;
+  border: 2px solid #0ea5ea;
+  color: #0ea5ea;
+  cursor: pointer;
+  font-size: 30px;
+  padding: 20px;
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
 }
-.sortable-list .details span {
-  color: #b9e0f2;
-  font-size: 1.4rem;
+.slider .arrow:focus {
+  outline: 0;
+}
+.slider .arrow.left-arrow {
+  left: calc(15vw - 65px);
+}
+.slider .arrow.right-arrow {
+  right: calc(15vw - 65px);
 }

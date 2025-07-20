@@ -1,31 +1,32 @@
-const sortableList = document.querySelector(".sortable-list");
+const slides = document.querySelectorAll(".slide");
+const leftBtn = document.getElementById("left");
+const rightBtn = document.getElementById("right");
 
-sortableList.addEventListener("dragstart", (e) => {
-  const item = e.target.closest(".item");
-  if (item) {
-    setTimeout(() => item.classList.add("dragging"), 0);
-  }
+let activeSlide = 0;
+
+leftBtn.addEventListener("click", () => {
+  setActiveSlide(-1);
 });
 
-sortableList.addEventListener("dragend", (e) => {
-  const item = e.target.closest(".item");
-  if (item) {
-    item.classList.remove("dragging");
-  }
+rightBtn.addEventListener("click", () => {
+  setActiveSlide(1);
 });
 
-sortableList.addEventListener("dragover", (e) => {
-  e.preventDefault();
-  const draggingItem = sortableList.querySelector(".dragging");
-  const siblings = Array.from(
-    sortableList.querySelectorAll(".item:not(.dragging)")
-  );
-  const nextSibling = siblings.find(
-    (sibling) => e.clientY <= sibling.offsetTop + sibling.offsetHeight / 2
-  );
-  sortableList.insertBefore(draggingItem, nextSibling);
-});
+setBgToBody();
 
-sortableList.addEventListener("dragenter", (e) => {
-  e.preventDefault();
-});
+function setActiveSlide(direction) {
+  activeSlide = (activeSlide + direction + slides.length) % slides.length;
+  setBgToBody();
+  updateSlideClasses();
+}
+
+function setBgToBody() {
+  document.body.style.backgroundImage =
+    slides[activeSlide].style.backgroundImage;
+}
+
+function updateSlideClasses() {
+  slides.forEach((slide, index) => {
+    slide.classList.toggle("active", index === activeSlide);
+  });
+}
