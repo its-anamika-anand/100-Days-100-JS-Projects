@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;0,700;1,400&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -5,79 +6,57 @@
 }
 
 html {
+  font-size: 62.5%;
   box-sizing: border-box;
 }
 
 body {
+  font-family: "Mulish", sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-}
-body::after {
-  background-image: inherit;
-  background-position: center center;
-  background-size: cover;
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -2;
-  transition: 0.4s ease;
+  flex-direction: column;
+  background-color: #a40101;
 }
 
-body::before {
-  background-color: rgba(0, 0, 0, 0.7);
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-}
-
-.slider {
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  position: relative;
-  overflow: hidden;
-  height: 70vh;
-  width: 70vw;
-}
-.slider .slide {
-  background-position: center center;
-  background-size: cover;
-  position: absolute;
-  top: -15vh;
-  left: -15vw;
-  height: 100vh;
-  width: 100vw;
-  opacity: 0;
-  transition: 0.4s ease;
-  z-index: 1;
-}
-.slider .slide.active {
-  opacity: 1;
-}
-.slider .arrow {
-  background-color: transparent;
-  border: 2px solid #0ea5ea;
-  color: #0ea5ea;
-  cursor: pointer;
-  font-size: 30px;
+.card {
+  width: calc(100% - 30px);
+  max-width: 640px;
+  text-align: center;
+  margin: 15px;
   padding: 20px;
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
+  border: 1px solid #222f43;
+  border-radius: 20px;
+  background-color: #131c31;
+  color: #b9e0f2;
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.05);
 }
-.slider .arrow:focus {
-  outline: 0;
+.card h1 {
+  font-size: 2.3rem;
+  margin-bottom: 2rem;
 }
-.slider .arrow.left-arrow {
-  left: calc(15vw - 65px);
+.card span {
+  display: block;
+  margin-bottom: 1.5rem;
+  font-size: 8rem;
+  line-height: 1;
+  color: #fff;
 }
-.slider .arrow.right-arrow {
-  right: calc(15vw - 65px);
+.card button {
+  font-size: 2rem;
+  font-family: inherit;
+  font-weight: 700;
+  padding: 1rem 2.5rem;
+  margin-top: 2rem;
+  border: 2px solid #0ea5ea;
+  background: transparent;
+  color: #fff;
+  border-radius: 50px;
+  cursor: pointer;
+}
+.card button:hover, .card button:active {
+  background: linear-gradient(90deg, #0ea5ea, #0bd1d1 51%, #0ea5ea);
 }

@@ -1,32 +1,11 @@
-const slides = document.querySelectorAll(".slide");
-const leftBtn = document.getElementById("left");
-const rightBtn = document.getElementById("right");
+const number = document.getElementById("number");
+const generateBtn = document.getElementById("generateBtn");
 
-let activeSlide = 0;
+const randomNumberGenerator = () => {
+  const randomNumber = Math.floor(Math.random() * 10 + 1);
+  number.textContent = randomNumber;
+};
 
-leftBtn.addEventListener("click", () => {
-  setActiveSlide(-1);
-});
+generateBtn.addEventListener("click", randomNumberGenerator);
 
-rightBtn.addEventListener("click", () => {
-  setActiveSlide(1);
-});
-
-setBgToBody();
-
-function setActiveSlide(direction) {
-  activeSlide = (activeSlide + direction + slides.length) % slides.length;
-  setBgToBody();
-  updateSlideClasses();
-}
-
-function setBgToBody() {
-  document.body.style.backgroundImage =
-    slides[activeSlide].style.backgroundImage;
-}
-
-function updateSlideClasses() {
-  slides.forEach((slide, index) => {
-    slide.classList.toggle("active", index === activeSlide);
-  });
-}
+randomNumberGenerator();
