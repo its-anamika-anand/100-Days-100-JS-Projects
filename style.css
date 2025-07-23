@@ -12,209 +12,133 @@ html {
 
 body {
   font-family: "Mulish", sans-serif;
+  color: #fff;
   line-height: 1.5;
   min-height: 100vh;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0f172a;
+  background-color: #fba2d3;
 }
 
-.hidden {
-  display: none !important;
-}
-
-.game {
+.wrapper {
   width: calc(100% - 30px);
   max-width: 640px;
+  text-align: center;
   margin: 15px;
-  user-select: none;
+  padding: 20px;
   border: 1px solid #222f43;
   border-radius: 20px;
   background-color: #131c31;
   color: #b9e0f2;
   box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.05);
 }
-
-.card {
-  margin: 20px;
-  height: 430px;
+.wrapper .options {
   display: flex;
-  justify-content: center;
-  flex-direction: column;
   align-items: center;
-}
-
-.splash form {
-  width: 100%;
-}
-.splash .radio-container {
-  width: 100%;
-  height: 75px;
-  padding: 12px 0;
-  margin-bottom: 20px;
-  cursor: pointer;
-  border: 2px solid #222f43;
-  border-radius: 5px;
-  position: relative;
-  display: flex;
   justify-content: space-between;
-  align-items: center;
 }
-.splash .radio-container.selected-label {
-  background-color: #0ea5ea;
-  color: #fff;
-}
-.splash .radio-container:hover {
-  color: #fff;
-}
-.splash .radio-container label {
-  font-size: 3rem;
-  padding-left: 15px;
-}
-.splash .radio-container input[type=radio] {
-  opacity: 0;
-  width: 100%;
-  height: 75px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  cursor: pointer;
-  z-index: 2;
-}
-.splash .best-score {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-right: 15px;
-  text-align: center;
-  font-size: 1.6rem;
-  max-width: fit-content;
-}
-.splash .best-score span {
-  margin: 0;
-}
-.splash .best-score span:last-child {
-  font-size: 2.2rem;
-}
-
-.countdown {
-  font-size: 10rem;
-  text-align: center;
-  user-select: none;
-  cursor: pointer;
-}
-
-.play .height-500 {
-  height: 500px;
-  width: 100%;
-}
-.play .item-container {
-  overflow-y: scroll;
-  position: relative;
-  width: 100%;
-  -ms-overflow-style: none;
-}
-.play .item-container::-webkit-scrollbar {
-  display: none;
-}
-.play .item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 80px;
-  font-size: 3rem;
-  user-select: none;
-  position: relative;
-  z-index: 2;
-  color: #fff;
-}
-.play .selected-item {
-  background-color: #0ea5ea;
-  position: fixed;
-  z-index: 1;
-  width: 100%;
-  max-width: 290px;
-  height: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.play .item-footer {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transform: translateY(10px);
-}
-.play .item-footer .wrong,
-.play .item-footer .right {
-  width: 40%;
-}
-.play .item-footer .wrong {
-  background-color: #da4453;
-  margin-right: 20px;
-}
-.play .item-footer .right {
-  background-color: #37bc9b;
-}
-
-.score .score-container {
-  text-align: center;
-}
-.score .score-container .title {
-  font-size: 4rem;
-  margin-bottom: 20px;
-}
-.score .score-container .final-time {
-  font-size: 10rem;
-  margin: 0;
-  color: #37bc9b;
-}
-.score .score-container .base-time {
-  margin-top: 50px;
-  margin-bottom: 20px;
-}
-.score .score-container .penalty-time {
-  color: #da4453;
-  margin-bottom: 20px;
-}
-.score .score-footer {
-  width: 100%;
-  height: 90px;
-}
-
-button {
-  cursor: pointer;
-  height: 45px;
-  border-radius: 6px;
-  font-size: 2.4rem;
-  font-family: inherit;
-  color: #fff;
+.wrapper .options input[type=color] {
   border: none;
+  width: 31%;
+  height: 50px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.wrapper .options input[type=color]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+.wrapper .options input[type=color]::-webkit-color-swatch {
+  border: none;
+}
+.wrapper .options .sizes {
+  width: 31%;
+  height: 50px;
+  padding: 0 0.5rem;
+  color: #fff;
+  font-family: inherit;
+  background: #181b29;
+  border: 1px solid #222f43;
+  border-radius: 6px;
   outline: none;
 }
-button:hover {
-  filter: brightness(110%);
-}
-button:active {
-  transform: scale(0.99);
-}
-button.start, button.play-again {
+.wrapper .qr-text {
+  padding: 1.5rem 1rem;
+  display: block;
+  background: #181b29;
+  border: 1px solid #222f43;
+  border-radius: 6px;
   width: 100%;
-  background-color: #0ea5ea;
+  margin: 1rem 0;
+  color: #fff;
+  font-family: inherit;
+  outline: none;
+}
+.wrapper #qr-code {
+  height: auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #414866;
+}
+.wrapper #qr-code img,
+.wrapper #qr-code canvas {
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
 
-@media screen and (max-width: 480px) {
-  .splash .radio-container label {
-    font-size: 2rem;
-    padding-left: 10px;
+.buttons {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0 0 0;
+}
+.buttons .btn {
+  color: #fff;
+  max-width: 200px;
+  padding: 14px;
+  background-color: #0ea5ea;
+  border-radius: 6px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.6rem;
+  font-family: inherit;
+  text-decoration: none;
+  flex: 1;
+}
+.buttons .btn i {
+  margin-left: 10px;
+}
+.buttons .btn:hover {
+  background-color: #0b83ba;
+  transition: 0.3s all;
+}
+.buttons .btn + .btn {
+  margin-left: 1rem;
+}
+
+@media (max-width: 512px) {
+  body {
+    max-width: 100%;
+    padding: 10px;
   }
-  .splash .best-score {
-    padding-right: 10px;
-    font-size: 1.4rem;
+
+  #qr-code {
+    width: 95vw;
+    height: 95vw;
   }
-  .splash .best-score span:last-child {
-    font-size: 2rem;
+
+  #qr-code img,
+#qr-code canvas {
+    max-width: 95vw !important;
+    max-height: 95vw !important;
+  }
+
+  .btn {
+    min-width: unset;
   }
 }
-/* Media Query: iPhone */
