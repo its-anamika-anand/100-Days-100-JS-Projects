@@ -1,32 +1,39 @@
-const title = document.getElementById("title");
-const author = document.getElementById("author");
-const year = document.getElementById("year");
-const bookList = document.getElementById("book-list");
-const btn = document.querySelector(".btn");
+const typedTextSpan = document.querySelector(".typed-text");
+const cursor = document.querySelector(".cursor");
 
-btn.addEventListener("click", function (e) {
-  e.preventDefault();
+const words = ["Awesome", "Fun", "Cool", "Life", "Famous", "Weird",];
+const typingDelay = 200;
+const erasingDelay = 200;
+const newLetterDelay = 2000;
+let index = 0;
+let charIndex = 0;
 
-  if (title.value == "" && author.value == "" && year.value == "") {
-    alert("Fill The Form");
-  } else {
-    const newRow = document.createElement("section");
-
-    // Creating new Title
-    const newTitle = document.createElement("div");
-    newTitle.innerHTML = title.value;
-    newRow.appendChild(newTitle);
-
-    // Creating new Author
-    const newAuthor = document.createElement("div");
-    newAuthor.innerHTML = author.value;
-    newRow.append(newAuthor);
-
-    // Creating new Year
-    const newYear = document.createElement("div");
-    newYear.innerHTML = year.value;
-    newRow.appendChild(newYear);
-
-    bookList.appendChild(newRow);
+document.addEventListener("DOMContentLoaded", () => {
+  if (words.length) {
+    setTimeout(type, newLetterDelay);
   }
 });
+
+function type() {
+  if (charIndex < words[index].length) {
+    typedTextSpan.textContent += words[index].charAt(charIndex);
+    charIndex++;
+    setTimeout(type, typingDelay);
+  } else {
+    setTimeout(erase, newLetterDelay);
+  }
+}
+
+function erase() {
+  if (charIndex > 0) {
+    typedTextSpan.textContent = words[index].substring(0, charIndex - 1);
+    charIndex--;
+    setTimeout(erase, erasingDelay);
+  } else {
+    index++;
+    if (index >= words.length) {
+      index = 0;
+    }
+    setTimeout(type, typingDelay + 1100);
+  }
+}
