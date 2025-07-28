@@ -1,0 +1,102 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Julee&display=swap" rel="stylesheet">
+    <title>Anamika Anand-CSS Rotating Text</title>
+  </head>
+  <style>
+    * {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: rgb(206, 184, 226);
+  font-family: "Julee", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+
+
+
+.outer-headings {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-size: 45px;
+}
+
+.inner-headings {
+  border: 0px solid #ddd;
+  height: 50px;
+  line-height: 50px;
+  font-size: 45px;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+.inner-headings span {
+  position: relative;
+  color: crimson;
+  animation: animation 10s ease infinite;
+}
+
+@keyframes animation {
+  0%,
+  100% {
+    top: 0;
+  }
+  20% {
+    top: 0;
+  }
+  25% {
+    top: -50px;
+  }
+  45% {
+    top: -50px;
+  }
+  50% {
+    top: -100px;
+  }
+  70% {
+    top: -100px;
+  }
+  75% {
+    top: -150px;
+  }
+  95% {
+    top: -150px;
+  }
+}
+
+  </style>
+  <body>
+    <div class="outer-headings">
+      <h1>
+        I am,
+        <div class="inner-headings">
+          <span>
+            UI/UX Designer <br />
+            Front-End Developer <br />
+            Back-End Developer <br />
+           Web Developer <br />
+            Python Developer <br />
+            Web Designer <br />
+            Web Developer <br />
+           Musician <br />
+            Full-Stack Developer <br />
+          </span>
+        </div>
+      </h1>
+    </div>
+  </body>
+</html>
